@@ -8,7 +8,7 @@
 int main(int argc, char *argv[]) {
     char host[] = "127.0.0.1";  // server IP to connect
     // char host[] = "192.168.43.181";		 // server IP to connect
-    char service[] = "2333";          // server port to connect
+    char service[] = "8000";          // server port to connect
     struct sockaddr_in toAddr, from;  // an Internet endpoint address
     int fromsize = sizeof(from);
     char buf[BUFLEN + 1];  // buffer for one line of text
