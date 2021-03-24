@@ -13,13 +13,13 @@
 #pragma comment(lib, "ws2_32.lib")  // Winsock Library
 
 int main() {
-    SOCKET udpSocket;                     // windows socket
-    WSADATA winSocketApi;                 // windows socket api
-    struct sockaddr_in server, si_other;  // socket address
+    SOCKET udpSocket;                   // windows socket
+    WSADATA winSocketApi;               // windows socket api
+    struct sockaddr_in server, client;  // socket address
     char buffer[BUFFER];
 
-    int recv_len;
-    int slen = sizeof(si_other);
+    int receiveLen;
+    int sendLen = sizeof(client);
 
     // Prepare the sockaddr_in structure
     server.sin_family = AF_INET;
@@ -44,7 +44,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
     puts("Bind done\n");
-    int count = 0;
+    int total = 0, success = 0, failed = 0;
     // Keep listening for data
     while (true) {
         printf("Waiting for data...\n");
@@ -52,17 +52,19 @@ int main() {
         // Clear the buffer by filling null, it might have previously received data
         memset(buffer, '\0', BUFFER);
         // Try to receive some data, this is a blocking call
-        if ((recv_len = recvfrom(udpSocket, buffer, BUFFER, 0, (struct sockaddr *)&si_other, &slen)) == SOCKET_ERROR) {
+        if ((receiveLen = recvfrom(udpSocket, buffer, BUFFER, 0, (struct sockaddr *)&client, &sendLen)) == SOCKET_ERROR) {
             printf("recvfrom() failed with error code : %d", WSAGetLastError());
             exit(EXIT_FAILURE);
         }
         // Print details of the client/peer and the data received
-        printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
-        printf("Data[%d]: %s\n", ++count, buffer);
+        printf("Received packet from %s:%d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
+        printf("Data[%d]: %s\n", ++success, buffer);
+        total++;
         // Reply the client with the same data
-        if (sendto(udpSocket, buffer, recv_len, 0, (struct sockaddr *)&si_other, slen) == SOCKET_ERROR) {
+        if (sendto(udpSocket, buffer, receiveLen, 0, (struct sockaddr *)&client, sendLen) == SOCKET_ERROR) {
             printf("sendto() failed with error code : %d", WSAGetLastError());
-            exit(EXIT_FAILURE);
+            // exit(EXIT_FAILURE);
+            failed++, total++;
         }
     }
     closesocket(udpSocket);
