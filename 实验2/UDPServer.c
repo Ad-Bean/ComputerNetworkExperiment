@@ -32,18 +32,21 @@ int main() {
         printf("Failed. Error Code : %d", WSAGetLastError());
         exit(EXIT_FAILURE);
     }
-    printf("Initialised.\n");
+    // printf("Initialised.\n");
     // Create a socket
+    printf("Creating Socket...\n");
     if ((udpSocket = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET) {
         printf("Could not create socket : %d", WSAGetLastError());
     }
-    printf("Socket created.\n");
+    // printf("Socket created.\n");
+
     // Bind
+    puts("Binding...\n");
     if (bind(udpSocket, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR) {
         printf("Bind failed with error code : %d", WSAGetLastError());
         exit(EXIT_FAILURE);
     }
-    puts("Bind done\n");
+    // puts("Bind done\n");
     int total = 0, success = 0, failed = 0;
     // Keep listening for data
     while (true) {
@@ -54,17 +57,22 @@ int main() {
         // Try to receive some data, this is a blocking call
         if ((receiveLen = recvfrom(udpSocket, buffer, BUFFER, 0, (struct sockaddr *)&client, &sendLen)) == SOCKET_ERROR) {
             printf("recvfrom() failed with error code : %d", WSAGetLastError());
-            exit(EXIT_FAILURE);
+            failed++;
+            // exit(EXIT_FAILURE);
         }
         // Print details of the client/peer and the data received
+        if (strcmp("quit", buffer) == 0) {
+            printf("total: %d\nsuccess: %d\bfailed: %d\n", total, success, failed);
+            break;
+        }
         printf("Received packet from %s:%d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
         printf("Data[%d]: %s\n", ++success, buffer);
         total++;
         // Reply the client with the same data
         if (sendto(udpSocket, buffer, receiveLen, 0, (struct sockaddr *)&client, sendLen) == SOCKET_ERROR) {
             printf("sendto() failed with error code : %d", WSAGetLastError());
-            // exit(EXIT_FAILURE);
-            failed++, total++;
+            exit(EXIT_FAILURE);
+            // failed++, total++;
         }
     }
     closesocket(udpSocket);
