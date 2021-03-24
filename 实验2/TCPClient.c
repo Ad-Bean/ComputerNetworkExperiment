@@ -38,9 +38,7 @@ int main(int argc, char *argv[]) {
         if (cc == SOCKET_ERROR) {
             printf("Receive Error:\n%d\n", WSAGetLastError());
             break;
-        }
-
-        else {
+        } else {
             count++;
             printf("%d\n+%s\n", count, buf);
         }
