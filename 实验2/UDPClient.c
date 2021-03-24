@@ -63,6 +63,11 @@ int main(void) {
         }
         printf("%s\n", buffer);
     }
+    strcpy(message, "quit");
+    if (sendto(winSocket, message, strlen(message), 0, (struct sockaddr *)&server, serverLen) == SOCKET_ERROR) {
+        printf("sendto() failed with error code : %d\n", WSAGetLastError());
+        exit(EXIT_FAILURE);
+    }
     closesocket(winSocket);
     WSACleanup();
     return 0;

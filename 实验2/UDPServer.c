@@ -62,7 +62,7 @@ int main() {
         }
         // Print details of the client/peer and the data received
         if (strcmp("quit", buffer) == 0) {
-            printf("total: %d\nsuccess: %d\bfailed: %d\n", total, success, failed);
+            printf("total: %d\nsuccess: %d\nfailed: %d\n", total, success, failed);
             break;
         }
         printf("Received packet from %s:%d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
