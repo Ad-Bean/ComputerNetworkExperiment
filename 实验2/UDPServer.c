@@ -1,3 +1,9 @@
+/*
+    **compile**
+    gcc UDPServer.c -lwsock32 -o UDPServer 
+    **execute**
+    ./UDPServer
+*/
 #include <stdio.h>
 #include <winsock2.h>
 

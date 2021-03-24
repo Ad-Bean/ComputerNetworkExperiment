@@ -1,3 +1,9 @@
+/*
+    **compile**
+    gcc UDPClient.c -lwsock32 -o UDPClient 
+    **execute**
+    ./UDPClient
+*/
 #include <stdio.h>
 #include <winsock2.h>
 
