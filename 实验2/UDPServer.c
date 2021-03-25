@@ -9,16 +9,14 @@
 
 #define true 1
 #define PORT 8000                   // The port on which to listen for incoming data
-#define BUFFER 32                   // Max length of buffer
+#define SIZE 1024                   // Max length of buffer
 #pragma comment(lib, "ws2_32.lib")  // Winsock Library
 
 int main() {
     SOCKET udpSocket;                   // windows socket
     WSADATA winSocketApi;               // windows socket api
     struct sockaddr_in server, client;  // socket address
-    char buffer[BUFFER];
-
-    int sendLen = sizeof(client);
+    int clientLen = sizeof(client);
 
     // Prepare the sockaddr_in struct
     server.sin_family = AF_INET;
@@ -28,62 +26,57 @@ int main() {
     // Initializing winsock
     printf("Initialising Winsock...\n");
     if (WSAStartup(MAKEWORD(2, 2), &winSocketApi) != 0) {
-        printf("Failed. Error Code: %d\n", WSAGetLastError());
+        printf("Initializeing failed, with error Code: %d\n", WSAGetLastError());
         exit(EXIT_FAILURE);
     }
 
     // Creating socket
     printf("Creating Socket...\n");
     if ((udpSocket = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET) {
-        printf("Could not create socket: %d", WSAGetLastError());
+        printf("Could not create socket: %d\n", WSAGetLastError());
+        exit(EXIT_FAILURE);
     }
 
     // Bind
-    puts("Binding...\n");
+    printf("Binding...\n");
     if (bind(udpSocket, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR) {
         printf("Bind failed with error code: %d\n", WSAGetLastError());
         exit(EXIT_FAILURE);
     }
 
-    int total = 0, success = 0, failed = 0;
+    int total = 0;
     printf("Listening...\n");
+    printf("Enter buffer size: ");
+    int bufferLen;
+    scanf("%d", &bufferLen);
+    char *buffer = malloc(sizeof(char) * bufferLen);
     while (true) {
         // printf("Waiting for packet...\n");
         // receive packets, which is a blocking call
-        int receiveLen = recvfrom(udpSocket, buffer, BUFFER, 0, (struct sockaddr *)&client, &sendLen);
+        // the third parameter of the sendto function is the len of the packet
+        int receiveLen = recvfrom(udpSocket, buffer, bufferLen, 0, (struct sockaddr *)&client, &clientLen);
         // fflush(stdout);
-        // memset(buffer, '\0', BUFFER);
+        // memset(buffer, '\0', bufferLen);
         if (receiveLen == SOCKET_ERROR) {
             printf("recvfrom() failed with error code: %d\n", WSAGetLastError());
-            failed++, total++;
-            break;
-            // continue;
-            // exit(EXIT_FAILURE);
+            continue;
         }
 
-        if (receiveLen == 0) {
-            printf("total: %d\nsuccess: %d\nfailed: %d\n", total, success, failed);
-            closesocket(udpSocket);
-            WSACleanup();
-            return 0;
-        }
         // if (strcmp("quit", buffer) == 0) {
         //     printf("total: %d\nsuccess: %d\nfailed: %d\n", total, success, failed);
-        //     closesocket(udpSocket);
-        //     WSACleanup();
-        //     return 0;
+        //     break;
         // }
 
         printf("Receiving packets from %s:%d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
-        printf("Packet[%d]: %s received\ntotal: %d\n", ++success, buffer, ++total);
+        printf("Packet[%d] received:\n%s\n", ++total, buffer);
+
         // Reply the client with the same data
-        // if (sendto(udpSocket, buffer, receiveLen, 0, (struct sockaddr *)&client, sendLen) == SOCKET_ERROR) {
+        // if (sendto(udpSocket, buffer, receiveLen, 0, (struct sockaddr *)&client, clientLen) == SOCKET_ERROR) {
         //     printf("sendto() failed with error code: %d\n", WSAGetLastError());
         //     // exit(EXIT_FAILURE);
         //     // failed++, total++;
         // }
     }
-    printf("total: %d\nsuccess: %d\nfailed: %d\n", total, success, failed);
     closesocket(udpSocket);
     WSACleanup();
     return 0;

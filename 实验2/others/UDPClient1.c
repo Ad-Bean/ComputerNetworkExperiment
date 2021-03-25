@@ -10,7 +10,7 @@
 #pragma comment(lib, "ws2_32.lib")  // Winsock Library
 #define true 1
 #define SERVER "127.0.0.1"  // ip address of udp server
-#define BUFFER 100           // Max length of buffer
+#define BUFFER 100          // Max length of buffer
 #define PORT 8000           // The port on which to listen for incoming data
 
 int main(void) {
@@ -49,7 +49,7 @@ int main(void) {
     printf("Sending message %d times...\n", count);
     while (count--) {
         // sending the message
-        if (sendto(winSocket, message, 100, 0, (struct sockaddr *)&server, serverLen) == SOCKET_ERROR) {
+        if (sendto(winSocket, message, BUFFER, 0, (struct sockaddr *)&server, serverLen) == SOCKET_ERROR) {
             printf("sendto() failed with error code : %d\n", WSAGetLastError());
             // exit(EXIT_FAILURE);
             continue;
