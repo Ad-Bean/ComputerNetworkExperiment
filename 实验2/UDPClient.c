@@ -10,7 +10,7 @@
 #pragma comment(lib, "ws2_32.lib")  // Winsock Library
 #define true 1
 #define SERVER "127.0.0.1"  // ip address of udp server
-#define BUFFER 32           // Max length of buffer
+#define SIZE 1024           // Max length of buffer
 #define PORT 8000           // The port on which to listen for incoming data
 
 int main(void) {
@@ -19,7 +19,7 @@ int main(void) {
     struct sockaddr_in server;
 
     int serverLen = sizeof(server);
-    char buffer[BUFFER], message[BUFFER];
+    char buffer[SIZE], message[SIZE];
 
     printf("Initializing windows socket...\n");
     if (WSAStartup(MAKEWORD(2, 2), &winSocketApi) != 0) {
@@ -39,36 +39,34 @@ int main(void) {
     server.sin_port = htons(PORT);
     server.sin_addr.S_un.S_addr = inet_addr(SERVER);
 
-    int count = 100000;
+    int count = 100;
     printf("Enter message: ");
-    gets(message);
+    scanf("%s", message);
+    printf("Enter buffer size: ");
+    int bufferLen = 5 * 1024;
+    scanf("%d", &bufferLen);
     printf("Sending message for %d times...\n", count);
     while (count--) {
         // sending the message to the server
-        if (sendto(winSocket, message, strlen(message), 0, (struct sockaddr *)&server, serverLen) == SOCKET_ERROR) {
+        // the third parameter of the sendto function is the len of the packet
+        if (sendto(winSocket, message, bufferLen, 0, (struct sockaddr *)&server, serverLen) == SOCKET_ERROR) {
             printf("sendto() failed with error code: %d\n", WSAGetLastError());
-            // exit(EXIT_FAILURE);
-            // continue;
-            break;
+            continue;
         }
 
         // receive a reply and print it
-        // memset(buffer, '\0', BUFFER);  // clear the buffer
+        // memset(buffer, '\0', bufferLen);  // clear the buffer
         // try to receive data, which is a blocking call
-        // if (recvfrom(winSocket, buffer, BUFFER, 0, (struct sockaddr *)&server, &serverLen) == SOCKET_ERROR) {
+        // if (recvfrom(winSocket, buffer, bufferLen, 0, (struct sockaddr *)&server, &serverLen) == SOCKET_ERROR) {
         //     printf("recvfrom() failed with error code: %d\n", WSAGetLastError());
-        //     // exit(EXIT_FAILURE);
-        //     // continue;
-        //     break;
+        //     continue;
         // }
         printf("sending packets %d\n", count);
     }
     // strcpy(message, "quit");
     // if (sendto(winSocket, message, strlen(message), 0, (struct sockaddr *)&server, serverLen) == SOCKET_ERROR) {
     //     printf("sendto() failed with error code : %d\n", WSAGetLastError());
-    //     exit(EXIT_FAILURE);
     // }
-    // printf("sent %d packets\n", count);
     closesocket(winSocket);
     WSACleanup();
     return 0;
