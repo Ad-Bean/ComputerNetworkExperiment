@@ -54,7 +54,7 @@ int main() {
         // printf("Waiting for packet...\n");
         // receive packets, which is a blocking call
         // the third parameter of the sendto function is the len of the packet
-        int receiveLen = recvfrom(udpSocket, buffer, bufferLen, 0, (struct sockaddr *)&client, &clientLen);
+        int receiveLen = recvfrom(udpSocket, buffer, strlen(buffer), 0, (struct sockaddr *)&client, &clientLen);
         // fflush(stdout);
         // memset(buffer, '\0', bufferLen);
         if (receiveLen == SOCKET_ERROR) {

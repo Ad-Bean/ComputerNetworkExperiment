@@ -54,7 +54,7 @@ int main(void) {
     while (count--) {
         // sending the message to the server
         // the third parameter of the sendto function is the len of the packet
-        if (sendto(winSocket, message, bufferLen, 0, (struct sockaddr *)&server, serverLen) == SOCKET_ERROR) {
+        if (sendto(winSocket, message, strlen(buffer), 0, (struct sockaddr *)&server, serverLen) == SOCKET_ERROR) {
             printf("sendto() failed with error code: %d\n", WSAGetLastError());
             continue;
         }
