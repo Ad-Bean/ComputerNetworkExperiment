@@ -62,10 +62,10 @@ int main() {
             continue;
         }
 
-        // if (strcmp("quit", buffer) == 0) {
-        //     printf("total: %d\nsuccess: %d\nfailed: %d\n", total, success, failed);
-        //     break;
-        // }
+        if (strcmp("quit", buffer) == 0) {
+            printf("total: %d\n", total);
+            break;
+        }
 
         printf("Receiving packets from %s:%d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
         printf("Packet[%d] received:\n%s\n", ++total, buffer);
