@@ -9,6 +9,7 @@
 
 #pragma comment(lib, "ws2_32.lib")  // Winsock Library
 #define true 1
+// #define SERVER "39.104.16.218"  // ip address of udp server
 #define SERVER "127.0.0.1"  // ip address of udp server
 #define SIZE 1024           // Max length of buffer
 #define PORT 8000           // The port on which to listen for incoming data
@@ -47,6 +48,7 @@ int main(void) {
     char *buffer = malloc(sizeof(char) * bufferLen);
     char *message = malloc(sizeof(char) * bufferLen);
     scanf("%s", message);
+    getchar();
     printf("Sending message for %d times...\n", count);
     while (count--) {
         // sending the message to the server
