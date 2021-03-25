@@ -9,10 +9,10 @@
 
 #pragma comment(lib, "ws2_32.lib")  // Winsock Library
 #define true 1
-// #define SERVER "39.104.16.218"  // ip address of udp server
-#define SERVER "127.0.0.1"  // ip address of udp server
-#define SIZE 1024           // Max length of buffer
-#define PORT 8000           // The port on which to listen for incoming data
+#define SERVER "39.104.16.218"  // ip address of udp server
+// #define SERVER "127.0.0.1"  // ip address of udp server
+#define SIZE 1024  // Max length of buffer
+#define PORT 8000  // The port on which to listen for incoming data
 
 int main(void) {
     SOCKET winSocket;
@@ -66,6 +66,7 @@ int main(void) {
         //     continue;
         // }
         printf("sending packets %d\n", count);
+        Sleep(1);
     }
     // strcpy(message, "quit");
     // if (sendto(winSocket, message, strlen(message), 0, (struct sockaddr *)&server, serverLen) == SOCKET_ERROR) {
