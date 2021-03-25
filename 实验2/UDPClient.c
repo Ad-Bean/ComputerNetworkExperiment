@@ -19,7 +19,7 @@ int main(void) {
     struct sockaddr_in server;
 
     int serverLen = sizeof(server);
-    char buffer[SIZE], message[SIZE];
+    // char buffer[SIZE], message[SIZE];
 
     printf("Initializing windows socket...\n");
     if (WSAStartup(MAKEWORD(2, 2), &winSocketApi) != 0) {
@@ -40,11 +40,13 @@ int main(void) {
     server.sin_addr.S_un.S_addr = inet_addr(SERVER);
 
     int count = 100;
-    printf("Enter message: ");
-    scanf("%s", message);
     printf("Enter buffer size: ");
-    int bufferLen = 5 * 1024;
+    int bufferLen;
     scanf("%d", &bufferLen);
+    printf("Enter message: ");
+    char *buffer = malloc(sizeof(char) * bufferLen);
+    char *message = malloc(sizeof(char) * bufferLen);
+    scanf("%s", message);
     printf("Sending message for %d times...\n", count);
     while (count--) {
         // sending the message to the server

@@ -16,7 +16,6 @@ int main() {
     SOCKET udpSocket;                   // windows socket
     WSADATA winSocketApi;               // windows socket api
     struct sockaddr_in server, client;  // socket address
-    char buffer[SIZE];
     int clientLen = sizeof(client);
 
     // Prepare the sockaddr_in struct
@@ -48,8 +47,9 @@ int main() {
     int total = 0;
     printf("Listening...\n");
     printf("Enter buffer size: ");
-    int bufferLen = 1024;
+    int bufferLen;
     scanf("%d", &bufferLen);
+    char *buffer = malloc(sizeof(char) * bufferLen);
     while (true) {
         // printf("Waiting for packet...\n");
         // receive packets, which is a blocking call
