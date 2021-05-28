@@ -1,0 +1,30 @@
+config
+interface gigabitEthernet 0/0
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+exit
+interface gigabitEthernet 0/1
+ip address 10.1.1.1 255.255.255.0
+no shutdown
+exit
+
+
+time-range work-time
+periodic weekdays 09:00 to 18:00
+exit
+
+ip access-list extended accessctrl
+permit ip host 192.168.1.254 10.1.1.0 0.0.0.255
+permit tcp 192.168.1.0 0.0.0.255 host 10.1.1.200 eq ftp time-range work-time
+permit tcp 192.168.1.0 0.0.0.255 host 10.1.1.200 eq ftp-data time-range work-time
+deny tcp 192.168.1.0 0.0.0.255 host 10.1.1.100 eq www time-range work-time
+permit tcp 192.168.1.0 0.0.0.255 host 10.1.1.100 eq www
+exit
+
+
+interface gigabitEthernet 0/0
+ip access-group accessctrl in
+end
+
+show clock
+clock set 15:18:54 5 28 2021
