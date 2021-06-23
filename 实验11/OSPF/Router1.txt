@@ -1,0 +1,60 @@
+enable 14
+b402
+
+config
+hostname Router1
+
+
+interface gigabitethernet 0/1
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+exit
+interface serial 2/0
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+exit
+
+// OSPF
+router ospf 1
+network 192.168.1.0 0.0.0.255 area 0
+network 192.168.2.0 0.0.0.255 area 0
+end
+
+//
+show ip route
+debug ip ospf
+
+no debug all
+no debug ip ospf
+
+// 
+
+interface gigabitethernet 0/0
+ip address 192.168.4.1 255.255.255.0
+no shutdown
+exit
+
+router ospf 1
+network 192.168.4.0 0.0.0.255 area 0
+end
+
+show ip route
+
+debug ip ospf
+
+no debug all
+
+show ip ospf database router
+
+show ip ospf database network
+
+show ip ospf interface
+
+show ip ospf neighbor
+
+show ip ospf database database-summary
+
+
+interface serial 2/0
+ip ospf cost 1
+exit
