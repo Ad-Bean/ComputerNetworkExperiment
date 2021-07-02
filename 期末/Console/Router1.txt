@@ -43,6 +43,9 @@ ip nat inside source list 1 interface serial 2/0 overload
 interface gigabitEthernet 0/1
 ip nat inside
 exit
+interface gigabitEthernet 0/0
+ip nat inside
+exit
 interface serial 2/0
 ip nat outside
 exit
