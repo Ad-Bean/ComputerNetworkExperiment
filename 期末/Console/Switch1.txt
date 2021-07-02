@@ -1,0 +1,48 @@
+enable 14
+b402
+
+config
+hostname Switch1
+vlan 20
+name vlan20
+exit
+vlan 10
+name vlan10
+exit
+
+
+interface gigabitEthernet 0/1
+switchport access vlan 20
+exit
+interface gigabitEthernet 0/5
+switchport access vlan 20
+exit
+
+interface range gigabitEthernet 0/23-24
+switchport mode trunk
+exit
+spanning-tree
+spanning-tree mode rstp
+
+show spanning-tree
+spanning-tree priority 20480
+show spanning-tree
+
+interface vlan 20
+ip address 192.168.20.1 255.255.255.0
+no shutdown
+exit
+
+interface vlan 10
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+exit
+
+router rip
+version 2
+
+network 192.168.20.0
+network 192.168.10.0
+network 192.168.2.0
+network 192.168.30.0
+network 192.168.40.0
