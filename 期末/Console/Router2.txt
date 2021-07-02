@@ -30,7 +30,7 @@ ip route 0.0.0.0 0.0.0.0 172.16.0.1
 router rip
 default-information originate
 network 172.16.0.0
-exit
+exit   
 
 ip nat pool natpool 172.16.3.2 172.16.3.2 netmask 255.255.0.0
 access-list 1 permit 192.168.2.0 0.0.0.255
