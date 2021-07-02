@@ -33,8 +33,6 @@ network 172.16.0.0
 exit
 
 ip nat pool natpool 172.16.3.2 172.16.3.2 netmask 255.255.0.0
-// ??
-ip nat pool natpool 172.16.12.2 172.16.12.2 netmask 255.255.0.0
 access-list 1 permit 192.168.2.0 0.0.0.255
 access-list 1 permit 192.168.10.0 0.0.0.255
 access-list 1 permit 192.168.20.0 0.0.0.255
