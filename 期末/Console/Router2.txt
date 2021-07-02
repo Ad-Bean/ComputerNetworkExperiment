@@ -52,26 +52,27 @@ interface gigabitEthernet 0/0
 ip nat outside
 exit
 
+//
+no time-range work-time
 
 time-range work-time
 periodic weekdays 09:00 to 18:00
 exit
 
 ip access-list extended accessctrl
-permit ip host 192.168.20.32 any
-permit ip host 192.168.10.33 any
-permit ip host 192.168.40.34 any
-deny tcp host 192.168.30.31 host 172.18.178.1 eq ftp time-range work-time
-deny tcp host 192.168.30.31 host 172.18.178.1 eq ftp-data time-range work-time
-permit ip host 192.168.30.31 any
-exit
-
-deny tcp host 192.168.20.31 120.0.0.0 0.255.255.255 time-range work-time
 permit tcp host 192.168.20.32 any
 permit tcp host 192.168.10.33 any
-permit tcp host 192.168.20.31 any
+permit tcp host 192.168.40.34 any
+deny tcp host 192.168.30.31 host 172.18.178.1 eq ftp time-range work-time
+deny tcp host 192.168.30.31 host 172.18.178.1 eq ftp-data time-range work-time
+permit tcp host 192.168.30.31 any
+exit
 
 interface gigabitEthernet 0/0
+ip access-group accessctrl out
+exit
+
+interface serial 2/0
 ip access-group accessctrl in
 exit
 
@@ -81,13 +82,13 @@ clock set 09:45:22 7 2 2021
 clock set 19:45:22 7 2 2021
 
 
-// 
+//  清理
 no ip access-list extended accessctrl
 
 interface gigabitEthernet 0/1
 no ip access-group accessctrl in
+no ip access-group accessctrl out
 exit
-no ip access-list extended accessctrl
 
 interface gigabitEthernet 0/0
 no ip access-group accessctrl out
@@ -97,3 +98,4 @@ no ip access-list extended accessctrl
 interface gigabitEthernet 0/1
 ip access-group accessctrl in
 exit
+
