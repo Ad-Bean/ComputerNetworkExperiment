@@ -1,0 +1,98 @@
+enable 14
+b402
+
+config
+hostname Router2
+
+interface serial 2/0
+ip address 192.168.2.2 255.255.255.0
+no shutdown
+interface gigabitEthernet 0/1
+ip address 192.168.40.1 255.255.255.0
+no shutdown
+
+router rip
+version 2
+
+network 192.168.2.0
+network 192.168.10.0
+network 192.168.20.0
+network 192.168.30.0
+network 192.168.40.0
+
+
+interface gigabitEthernet 0/0
+ip address 172.16.11.2 255.255.0.0
+no shutdown
+exit
+
+ip route 0.0.0.0 0.0.0.0 172.16.0.1
+router rip
+default-information originate
+network 172.16.0.0
+exit
+
+ip nat pool natpool 172.16.3.2 172.16.3.2 netmask 255.255.0.0
+ip nat inside source list 1 pool natpool overload
+access-list 1 permit 192.168.2.0 0.0.0.255
+access-list 1 permit 192.168.10.0 0.0.0.255
+access-list 1 permit 192.168.20.0 0.0.0.255
+access-list 1 permit 192.168.30.0 0.0.0.255
+access-list 1 permit 192.168.40.0 0.0.0.255
+
+interface gigabitEthernet 0/0
+ip nat outside
+exit
+interface gigabitEthernet 0/1
+ip nat inside
+exit
+interface serial 2/0
+ip nat inside
+exit
+
+
+time-range work-time
+periodic weekdays 09:00 to 18:00
+exit
+
+ip access-list extended accessctrl
+permit ip host 192.168.20.32 host 202.108.22.5
+permit ip host 192.168.20.32 host 192.168.40.34
+permit ip host 192.168.10.33 host 202.108.22.5
+permit ip host 192.168.10.33 host 192.168.40.34
+deny tcp host 192.168.20.31 host 202.108.22.5 time-range work-time
+permit ip host 192.168.20.31 host 202.108.22.5
+permit ip host 192.168.20.31 host 192.168.40.34
+exit
+
+deny tcp host 192.168.20.31 120.0.0.0 0.255.255.255 time-range work-time
+permit tcp host 192.168.20.32 any
+permit tcp host 192.168.10.33 any
+permit tcp host 192.168.20.31 any
+
+interface gigabitEthernet 0/0
+ip access-group accessctrl out
+exit
+
+exit
+show clock
+clock set 09:45:22 7 2 2021
+clock set 19:45:22 7 2 2021
+
+
+// 
+no ip access-list extended accessctrl
+
+interface gigabitEthernet 0/1
+no ip access-group accessctrl in
+exit
+no ip access-list extended accessctrl
+
+interface gigabitEthernet 0/0
+no ip access-group accessctrl out
+exit
+no ip access-list extended accessctrl
+
+interface gigabitEthernet 0/1
+ip access-group accessctrl in
+exit
