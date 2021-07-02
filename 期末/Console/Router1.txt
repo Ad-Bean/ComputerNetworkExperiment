@@ -26,17 +26,20 @@ network 192.168.30.0
 
 
 ip route 0.0.0.0 0.0.0.0 serial 2/0
+
 router rip
 default-information originate
 network 172.16.0.0
 exit
 
-ip nat inside source list 1 interface serial 2/0 overload
-access-list 1 permit 192.168.10.0 0.0.0.255
 access-list 1 permit 192.168.2.0  0.0.0.255
+access-list 1 permit 192.168.10.0 0.0.0.255
 access-list 1 permit 192.168.20.0 0.0.0.255
 access-list 1 permit 192.168.30.0 0.0.0.255
 access-list 1 permit 192.168.40.0 0.0.0.255
+
+ip nat inside source list 1 interface serial 2/0 overload
+
 interface gigabitEthernet 0/1
 ip nat inside
 exit

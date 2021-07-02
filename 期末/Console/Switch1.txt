@@ -10,7 +10,6 @@ vlan 10
 name vlan10
 exit
 
-
 interface gigabitEthernet 0/1
 switchport access vlan 20
 exit
@@ -21,6 +20,7 @@ exit
 interface range gigabitEthernet 0/23-24
 switchport mode trunk
 exit
+
 spanning-tree
 spanning-tree mode rstp
 
@@ -28,15 +28,16 @@ show spanning-tree
 spanning-tree priority 20480
 show spanning-tree
 
+interface vlan 10
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+exit
+
 interface vlan 20
 ip address 192.168.20.1 255.255.255.0
 no shutdown
 exit
 
-interface vlan 10
-ip address 192.168.10.1 255.255.255.0
-no shutdown
-exit
 
 router rip
 version 2
